@@ -5,6 +5,7 @@ var browser = !!global.window;
 var Matrix = require('../CSSMatrix');
 var Tuple = require('../Tuple4');
 
+var SMALL_NUMBER = 1e-6;
 var assert = {
 	equal: function(expected, actual){
 		if (expected !== actual)
@@ -18,7 +19,7 @@ var assertMatrix = function(expected, actual){
 	expected = m;
 	for (var i = 1; i <= 4; i++) for (var j = 1; j <= 4; j++){
 		var p = 'm' + j + i;
-		if (Math.abs(expected[p] - actual[p]) > Matrix.SMALL_NUMBER){
+		if (Math.abs(expected[p] - actual[p]) > SMALL_NUMBER){
 			console.log("failing matrix:", actual, "should be ", expected);
 			throw new Error("Expected " + p + " to be " + expected[p] + " but was " + actual[p]);
 		}
@@ -138,12 +139,30 @@ test("skewX", function(Matrix){
 	assertMatrix('matrix3d(1, 0, 0, 0, 0.03492076949174773, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)', m);
 });
 
-test("transform", function(Matrix){
+
+test("chained1", function(Matrix){
 	var m = new Matrix();
-	m = m.rotate(0, 0, 90);
-	var t = new Tuple(1, 0, 0, 1);
-	m.transform(t);
-	assert.equal( 0, t.x);
-	assert.equal(-1, t.y);
-	assert.equal( 0, t.z);
-}, false);
+	m = m.rotate(-15, 20, 0).translate(0, 0, 80);
+	assertMatrix('matrix3d(0.939693, 0, -0.342020, 0, -0.088521, 0.965926, -0.243210, 0, 0.330366, 0.258819, 0.907673, 0, 26.429287, 20.705524, 72.613870, 1)', m);
+});
+
+test("chained2", function(Matrix){
+	var m = new Matrix();
+	m = m.translate(0, 0, 80).rotate(-15, 20, 0);
+	assertMatrix('matrix3d(0.939693, 0, -0.342020, 0, -0.088521, 0.965926, -0.243210, 0, 0.330366, 0.258819, 0.907673, 0, 0, 0, 80, 1)', m);
+});
+
+test("multiply1", function(Matrix){
+	var m1 = new Matrix().rotate(-15, 20, 0);
+	var m2 = new Matrix().translate(0, 0, 80);
+	var m = m1.multiply(m2);
+	assertMatrix('matrix3d(0.939693, 0, -0.342020, 0, -0.088521, 0.965926, -0.243210, 0, 0.330366, 0.258819, 0.907673, 0, 26.429287, 20.705524, 72.613870, 1)', m);
+});
+
+test("multiply2", function(Matrix){
+	var m1 = new Matrix().rotate(-15, 20, 0);
+	var m2 = new Matrix().translate(0, 0, 80);
+	var m = m2.multiply(m1);
+	assertMatrix('matrix3d(0.939693, 0, -0.342020, 0, -0.088521, 0.965926, -0.243210, 0, 0.330366, 0.258819, 0.907673, 0, 0, 0, 80, 1)', m);
+});
+
