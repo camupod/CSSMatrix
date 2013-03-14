@@ -29,8 +29,10 @@ function CSSMatrix() {
 	} else if (a.length == 6) {
 		m.m11 = m.a = a[0]; m.m12 = m.b = a[1]; m.m14 = m.e = a[4];
 		m.m21 = m.c = a[2]; m.m22 = m.d = a[3]; m.m24 = m.f = a[5];
+	} else if (a.length === 1 && typeof a[0] == 'string') {
+		m.setMatrixValue(a[0]);
 	} else if (a.length > 0) {
-		throw 'Syntax error';
+		throw new TypeError('Invalid Matrix Value');
 	}
 }
 
