@@ -275,7 +275,7 @@ CSSMatrix.prototype.inverse = function() {
  * @return {CSSMatrix} The result matrix
  */
 CSSMatrix.prototype.translate = function(x, y, z) {
-	if (z == null) z = 0;
+	if (typeof z == 'undefined') z = 0;
 	return multiply(this, translate(x, y, z));
 };
 
@@ -292,8 +292,8 @@ CSSMatrix.prototype.translate = function(x, y, z) {
  * @return {CSSMatrix} The result matrix
  */
 CSSMatrix.prototype.scale = function(x, y, z) {
-	if (y == null) y = x;
-	if (z == null) z = 1;
+	if (typeof y == 'undefined') y = x;
+	if (typeof z == 'undefined') z = 1;
 	return multiply(this, scale(x, y, z));
 };
 
@@ -311,8 +311,8 @@ CSSMatrix.prototype.scale = function(x, y, z) {
  * @return {CSSMatrix} The result matrix
  */
 CSSMatrix.prototype.rotate = function(rx, ry, rz) {
-	if (ry == null) ry = rx;
-	if (rz == null) rz = rx;
+	if (typeof ry == 'undefined') ry = rx;
+	if (typeof rz == 'undefined') rz = rx;
 	return multiply(this, rotate(rx, ry, rz));
 };
 
@@ -330,8 +330,8 @@ CSSMatrix.prototype.rotate = function(rx, ry, rz) {
  * @return {CSSMatrix} The result matrix
  */
 CSSMatrix.prototype.rotateAxisAngle = function(x, y, z, angle) {
-	if (y == null) y = x;
-	if (z == null) z = x;
+	if (typeof y == 'undefined') y = x;
+	if (typeof z == 'undefined') z = x;
 	return multiply(this, rotateAxisAngle(x, y, z, angle));
 };
 
