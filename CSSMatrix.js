@@ -185,24 +185,30 @@ CSSMatrix.multiply = function(m1, m2){
  * @param {String} string The string to parse.
  */
 CSSMatrix.prototype.setMatrixValue = function(string){
+	var i, m = this,
+		parts = [],
+		patternNone = /^none$/,
+		patternMatrix = /^matrix\((.*)\)/,
+		patternMatrix3d = /^matrix3d\((.*)\)/;
+
 	string = String(string).trim();
-	var m = this;
 	m.setIdentity();
-	if (string == 'none') return m;
-	var type = string.slice(0, string.indexOf('(')), parts, i;
-	if (type == 'matrix3d'){
-		parts = string.slice(9, -1).split(',');
-		for (i = parts.length; i--;) parts[i] = parseFloat(parts[i]);
+
+	if (patternNone.test(string)) return m;
+
+	parts = string.replace(/^.*\((.*)\)$/g, "$1").split(/\s*,\s*/);
+	for (i = parts.length; i--;) parts[i] = parseFloat(parts[i]);
+
+	if (patternMatrix.test(string) && parts.length === 6) {
+		m.affine = true;
+		parts = string.slice(7, -1).split(',');
+		m.m11 = m.a = parts[0]; m.m12 = m.b = parts[2]; m.m41 = m.e = parts[4];
+		m.m21 = m.c = parts[1]; m.m22 = m.d = parts[3]; m.m42 = m.f = parts[5];
+	} else if (patternMatrix3d.test(string) && parts.length === 16) {
 		m.m11 = m.a = parts[0]; m.m12 = m.b = parts[1]; m.m13 = parts[2];  m.m14 = parts[3];
 		m.m21 = m.c = parts[4]; m.m22 = m.d = parts[5]; m.m23 = parts[6];  m.m24 = parts[7];
 		m.m31 = parts[8]; m.m32 = parts[9]; m.m33 = parts[10]; m.m34 = parts[11];
 		m.m41 = m.e = parts[12]; m.m42 = m.f = parts[13]; m.m43 = parts[14]; m.m44 = parts[15];
-	} else if (type == 'matrix'){
-		m.affine = true;
-		parts = string.slice(7, -1).split(',');
-		for (i = parts.length; i--;) parts[i] = parseFloat(parts[i]);
-		m.m11 = m.a = parts[0]; m.m12 = m.b = parts[2]; m.m41 = m.e = parts[4];
-		m.m21 = m.c = parts[1]; m.m22 = m.d = parts[3]; m.m42 = m.f = parts[5];
 	} else {
 		throw new TypeError('Invalid Matrix Value');
 	}
