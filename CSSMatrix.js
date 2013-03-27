@@ -27,8 +27,9 @@ function CSSMatrix() {
 		m.m31 = a[8];  m.m32 = a[9];  m.m33 = a[10]; m.m34 = a[11];
 		m.m41 = m.e = a[12]; m.m42 = m.f = a[13]; m.m43 = a[14]; m.m44 = a[15];
 	} else if (a.length == 6) {
-		m.m11 = m.a = a[0]; m.m12 = m.b = a[1]; m.m14 = m.e = a[4];
-		m.m21 = m.c = a[2]; m.m22 = m.d = a[3]; m.m24 = m.f = a[5];
+		m.m11 = m.a = a[0]; m.m12 = m.b = a[1];
+		m.m21 = m.c = a[2]; m.m22 = m.d = a[3];
+		m.m41 = m.e = a[4]; m.m42 = m.f = a[5];
 	} else if (typeof a[0] == 'string') {
 		m.setMatrixValue(a[0]);
 	} else if (a.length > 0) {
@@ -224,7 +225,6 @@ CSSMatrix.prototype.setMatrixValue = function(string) {
 	for (i = parts.length; i--;) parts[i] = parseFloat(parts[i]);
 
 	if (patternMatrix.test(string) && parts.length === 6) {
-		parts = string.slice(7, -1).split(',');
 		m.m11 = m.a = parts[0]; m.m12 = m.b = parts[2]; m.m41 = m.e = parts[4];
 		m.m21 = m.c = parts[1]; m.m22 = m.d = parts[3]; m.m42 = m.f = parts[5];
 	} else if (patternMatrix3d.test(string) && parts.length === 16) {
