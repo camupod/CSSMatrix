@@ -33,6 +33,9 @@ __Properties:__
 - m11 to m44. m12 is the second element in the first row.
 
 ## MIT License
+Copyright (C) 2013 Cameron Lakenen
+
+Same License as below. As this code is a modification of the project https://github.com/arian/CSSMatrix it is required to maintain the following license:
 
 Copyright (c) 2013 Arian Stolwijk
 
